@@ -51,7 +51,7 @@ Handle RestartTimer;
 
 public Plugin myinfo = 
 {
-	name = "Knife Round: Back from the dead",
+	name = "Knife Round",
 	author = PLUGIN_AUTHOR,
 	description = "Fixed version of the long broken Knife Round plugin",
 	version = PLUGIN_VERSION,
