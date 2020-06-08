@@ -67,12 +67,12 @@ public void OnPluginStart()
 
 	//Defining the Commands
 	RegAdminCmd("sm_skipkr", command_skipkr, ADMFLAG_CHANGEMAP, "Skips the Knife Round and keeps all players in their current teams");
-	
+
 	//Defining the ConVars
 	krcv_roundtime = CreateConVar("sm_kniferoundtime", "60.0", "How much time should knife round take? (0.5 to 60.0 minutes)", _, true, 0.5, true, 60.0);
 	krcv_votetime = CreateConVar("sm_kniferoundvotetime", "10.0", "How much time should the vote take? (5 to 20 seconds)", _, true, 5.0, true, 20.0);
 	krcv_enablealltalk = CreateConVar("sm_enablealltalk", "1", "Should alltalk be enabled while the Knife Round is running? (1 - enabled, 0 - disabled)", _, true, 0.0, true, 1.0);
-	
+
 	//Getting the SourceMod/CS:GO ConVars
 	krcv_BuyTimeNormal = FindConVar("mp_buytime");
 	krcv_BuyTimeImmunity = FindConVar("mp_buy_during_immunity");
@@ -89,7 +89,7 @@ public void OnConfigsExecuted()
 	krf_CvarRoundTime = GetConVarFloat(krcv_roundtime);
 	krf_CvarVoteTime = GetConVarFloat(krcv_votetime);
 	kri_CvarAllowAllTalk = GetConVarInt(krcv_enablealltalk);
-	
+
 	krf_CvarBuyTimeNormal = GetConVarFloat(krcv_BuyTimeNormal);
 	krf_CvarBuyTimeImmunity = GetConVarFloat(krcv_BuyTimeImmunity);
 	kri_CvarTalkDead = GetConVarInt(krcv_TalkDead);
@@ -139,7 +139,6 @@ public Action RoundStart(Handle event, const char[] name, bool dontBroadcast)
 		return Plugin_Handled;
 	}
 
-	
 	if (krb_played)
 		return Plugin_Handled;
 	
@@ -177,7 +176,6 @@ public Action RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 		if (kri_winningteam != CS_TEAM_CT && kri_winningteam != CS_TEAM_T)
 		{
 			CPrintToChatAll("%t", "Win_None");
-			
 			RestartLastTime();
 		}
 		else
@@ -191,7 +189,7 @@ public Action RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 stock void TeamVote()
 {
 	CPrintToChatAll("%t", "Voting_Start");
-	
+
 	kri_clientwinners = 0;
 	for (int i = 1;i <= MAX_PLAYERS;i++)
 	{
@@ -204,7 +202,7 @@ stock void TeamVote()
 			}
 		}
 	}
-	
+
 	Menu hMenu = new Menu(ShowVotingMenuHandle);
 	char cTempBuffer[128];
 	Format(cTempBuffer, 127, "%t", "Menu_Title");
