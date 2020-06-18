@@ -13,38 +13,45 @@
 #pragma newdecls required
 
 //Plugin ConVars
-ConVar krcv_roundtime;
-ConVar krcv_enablealltalk;
-ConVar krcv_votetime;
+ConVar
+	krcv_roundtime
+	, krcv_enablealltalk
+	, krcv_votetime
+	, krcv_onstalemate
 //SourceMod/CS:GO ConVars
-ConVar krcv_BuyTimeNormal;
-ConVar krcv_BuyTimeImmunity;
-ConVar krcv_TalkDead;
-ConVar krcv_TalkLiving;
+	, krcv_BuyTimeNormal
+	, krcv_BuyTimeImmunity
+	, krcv_TalkDead
+	, krcv_TalkLiving;
 
 //Plugin integers
-int kri_CvarAllowAllTalk;
-int kri_winningteam;
-int kri_roundnumber = 0;
-int kri_clientwinners = 0;
-int kri_clientwinnersID[MAX_PLAYERS+1];
-int kri_StayNum;
-int kri_SwapNum;
+int
+	kri_CvarAllowAllTalk
+	, kri_winningteam
+	, kri_roundnumber = 0
+	, kri_clientwinners = 0
+	, kri_clientwinnersID[MAX_PLAYERS+1]
+	, kri_StayNum
+	, kri_SwapNum
+	, kri_OnStaleMate
 //SourceMod/CS:GO integers
-int kri_CvarTalkDead;
-int kri_CvarTalkLiving;
+	, kri_CvarTalkDead
+	, kri_CvarTalkLiving;
 
 //Plugin floats
-float krf_CvarRoundTime;
-float krf_CvarVoteTime;
+float
+	krf_CvarRoundTime
+	, krf_CvarVoteTime
 //SourceMod/CS:GO floats
-float krf_CvarBuyTimeNormal;
-float krf_CvarBuyTimeImmunity;
+	, krf_CvarBuyTimeNormal
+	, krf_CvarBuyTimeImmunity;
 
 //Plugin booleans
-bool krb_played = false;
-bool krb_matchstarted = false;
-bool b_swap = false;
+bool
+	krb_played
+	, krb_matchstarted
+	, krb_onstalemate
+	, b_swap;
 
 //Plugin Handles
 Handle RestartTimer;
@@ -59,19 +66,21 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	LoadTranslations("knife_round.phrases");
+	LoadTranslations("KnifeRound.phrases");
 	//Hooking the necessary events
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
 	HookEvent("player_spawn", PlayerSpawn);
 
 	//Defining the Commands
-	RegAdminCmd("sm_skipkr", command_skipkr, ADMFLAG_CHANGEMAP, "Skips the Knife Round and keeps all players in their current teams");
+	RegAdminCmd("sm_skipkr", Command_Skip, ADMFLAG_CHANGEMAP, "Skips the Knife Round and keeps all players in their current teams");
+	RegAdminCmd("sm_krreload", Command_Reload, ADMFLAG_ROOT, "Reloads the configuration file for the plugin.");
 
 	//Defining the ConVars
 	krcv_roundtime = CreateConVar("sm_kniferoundtime", "60.0", "How much time should knife round take? (0.5 to 60.0 minutes)", _, true, 0.5, true, 60.0);
 	krcv_votetime = CreateConVar("sm_kniferoundvotetime", "10.0", "How much time should the vote take? (5 to 20 seconds)", _, true, 5.0, true, 20.0);
 	krcv_enablealltalk = CreateConVar("sm_enablealltalk", "1", "Should alltalk be enabled while the Knife Round is running? (1 - enabled, 0 - disabled)", _, true, 0.0, true, 1.0);
+	krcv_onstalemate = CreateConVar("sm_kniferoundstalemate", "1", "Should the teams get swapped on a voting stalemate? (1 - enabled, 0 - disabled)", _, true, 0.0, true, 1.0);
 
 	//Getting the SourceMod/CS:GO ConVars
 	krcv_BuyTimeNormal = FindConVar("mp_buytime");
@@ -89,6 +98,7 @@ public void OnConfigsExecuted()
 	krf_CvarRoundTime = GetConVarFloat(krcv_roundtime);
 	krf_CvarVoteTime = GetConVarFloat(krcv_votetime);
 	kri_CvarAllowAllTalk = GetConVarInt(krcv_enablealltalk);
+	kri_OnStaleMate = GetConVarInt(krcv_onstalemate);
 
 	krf_CvarBuyTimeNormal = GetConVarFloat(krcv_BuyTimeNormal);
 	krf_CvarBuyTimeImmunity = GetConVarFloat(krcv_BuyTimeImmunity);
@@ -100,15 +110,29 @@ public void OnMapStart()
 {
 	krb_played = false, krb_matchstarted = false, b_swap = false;
 	kri_roundnumber = 0, kri_StayNum = 0, kri_SwapNum = 0;
+	if(kri_OnStaleMate == 1)
+	{
+		krb_onstalemate = true;
+	}
+	else if(kri_OnStaleMate == 0)
+	{
+		krb_onstalemate = false;
+	}
 }
 
-public Action command_skipkr(int client, int args)
+public Action Command_Skip(int client, int args)
 {
 	if (!krb_played)
 	{
 		CPrintToChatAll("%t", "Admin_Skip");
 		RestartAdminSkip();
 	}
+}
+
+public Action Command_Reload(int client, int args)
+{
+	OnConfigsExecuted();
+	CReplyToCommand(client, "%t", "Config_Reload");
 }
 
 public Action PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
@@ -241,7 +265,14 @@ public int ShowVotingMenuHandle(Menu hMenu, MenuAction action, int param1, int p
 
 public Action EndTheVote(Handle hTimer)
 {
-	if(kri_SwapNum >= kri_StayNum) { b_swap = true; }
+	if(krcv_onstalemate)
+	{
+		if(kri_SwapNum >= kri_StayNum) { b_swap = true; }
+	}
+	else
+	{
+		if(kri_StayNum >= kri_SwapNum) { b_swap = false; }
+	}
 
 	if (b_swap)
 	{
