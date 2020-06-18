@@ -17,3 +17,21 @@ Description: Skips the knife round and resume the game as default without swappi
 `sm_krreload`\
 Flag: (ADMFLAG_ROOT)\
 Description: Reloads the plugin configuration file.
+
+# ConVars
+
+`sm_kniferoundtime`\
+Default value:60.0\
+Description: How much time should knife round take? (0.5 to 60.0 minutes)\
+
+`sm_kniferoundvotetime`\
+Default value:10.0\
+Description: How much time should the vote take? (5 to 20 seconds)\
+
+`sm_enablealltalk`\
+Default value:1\
+Description: Should alltalk be enabled while the Knife Round is running? (1 - enabled, 0 - disabled)\
+
+`sm_kniferoundstalemate`\
+Default value:1\
+Description: Should the teams get swapped on a voting stalemate? (1 - enabled, 0 - disabled)\
