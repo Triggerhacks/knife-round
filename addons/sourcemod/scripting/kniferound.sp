@@ -104,20 +104,18 @@ public void OnConfigsExecuted()
 	krf_CvarBuyTimeImmunity = GetConVarFloat(krcv_BuyTimeImmunity);
 	kri_CvarTalkDead = GetConVarInt(krcv_TalkDead);
 	kri_CvarTalkLiving = GetConVarInt(krcv_TalkLiving);
+
+	if(kri_OnStaleMate == 1) { krb_onstalemate = true; }
+	else { krb_onstalemate = false; }
 }
 
 public void OnMapStart()
 {
-	krb_played = false, krb_matchstarted = false, b_swap = false;
+	krb_played = false, krb_matchstarted = false, b_swap = false, krb_onstalemate = false;
 	kri_roundnumber = 0, kri_StayNum = 0, kri_SwapNum = 0;
-	if(kri_OnStaleMate == 1)
-	{
-		krb_onstalemate = true;
-	}
-	else if(kri_OnStaleMate == 0)
-	{
-		krb_onstalemate = false;
-	}
+
+	if(kri_OnStaleMate == 1) { krb_onstalemate = true; }
+	else { krb_onstalemate = false; }
 }
 
 public Action Command_Skip(int client, int args)
@@ -265,7 +263,7 @@ public int ShowVotingMenuHandle(Menu hMenu, MenuAction action, int param1, int p
 
 public Action EndTheVote(Handle hTimer)
 {
-	if(krcv_onstalemate)
+	if(krb_onstalemate)
 	{
 		if(kri_SwapNum >= kri_StayNum) { b_swap = true; }
 	}
