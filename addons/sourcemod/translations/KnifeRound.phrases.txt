@@ -2,26 +2,26 @@
 {
 	"Knife_Start"
 	{
-		"en"		"[{gold}Flash{default}] The knife round starts!"
-		"pl"		"[{gold}Flash{default}] Zaczyna się runda nożowa!"
+		"en"		"[KnifeRound] The knife round starts!"
+		"pl"		"[KnifeRound] Zaczyna się runda nożowa!"
 	}
 	
 	"Knife_End"
 	{
-		"en"		"[{gold}Flash{default}] The knife round has ended!"
-		"pl"		"[{gold}Flash{default}] Runda nożowa się skończyła!"
+		"en"		"[KnifeRound] The knife round has ended!"
+		"pl"		"[KnifeRound] Runda nożowa się skończyła!"
 	}
 	
 	"Win_None"
 	{
-		"en"		"[{gold}Flash{default}] Neither team won the knife round!"
-		"pl"		"[{gold}Flash{default}] Żadna z drużyn nie wygrała rundy nożowej!"
+		"en"		"[KnifeRound] Neither team won the knife round!"
+		"pl"		"[KnifeRound] Żadna z drużyn nie wygrała rundy nożowej!"
 	}
 	
 	"Voting_Start"
 	{
-		"en"		"[{gold}Flash{default}] Teamvote is starting!"
-		"pl"		"[{gold}Flash{default}] Trwa głosowanie na drużynę startową!"
+		"en"		"[KnifeRound] Teamvote is starting!"
+		"pl"		"[KnifeRound] Trwa głosowanie na drużynę startową!"
 	}
 	
 	"Menu_Title"
@@ -32,27 +32,29 @@
 	
 	"An_Error"
 	{
-		"en"		"[{gold}Flash{default}] Whoops! Something went wrong, nothing was chosen so teams will stay the same"
-		"pl"		"[{gold}Flash{default}] Ups! Coś poszło nie tak, nikt nie został wybrany więc drużyny pozostaną te same"
+		"en"		"[KnifeRound] Whoops! Something went wrong, nothing was chosen so teams will stay the same"
+		"pl"		"[KnifeRound] Ups! Coś poszło nie tak, nikt nie został wybrany więc drużyny pozostaną te same"
 	}
 	
 	"Winning_Swap"
 	{
-		"en"		"[{gold}Flash{default}] Winning team decided to {red}swap{default}!"
-		"pl"		"[{gold}Flash{default}] Zwycięska drużyna zamienia się miejscami!"
+		"en"		"[KnifeRound] Winning team decided to {red}swap{default}!"
+		"pl"		"[KnifeRound] Zwycięska drużyna zamienia się miejscami!"
 	}
 	
 	"Winning_Stay"
 	{
-		"en"		"[{gold}Flash{default}] Winning team decided to {red}stay{default}!"
-		"pl"		"[{gold}Flash{default}] Zwycięska drużyna nie zmienia miejsc!"
+		"en"		"[KnifeRound] Winning team decided to {red}stay{default}!"
+		"pl"		"[KnifeRound] Zwycięska drużyna nie zmienia miejsc!"
 	}
+	
 	"Admin_Skip"
 	{
-		"en"		"[{gold}Flash{default}] An Admin has skipped the Knife Round!"
+		"en"		"[KnifeRound] An Admin has skipped the Knife Round!"
 	}
+	
 	"Config_Reload"
 	{
-		"en"		"[{gold}Flash{default}] The Configuration file has been reloaded!"
+		"en"		"[KnifeRound] The Configuration file has been reloaded!"
 	}
 }
