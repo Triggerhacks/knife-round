@@ -18,12 +18,15 @@ ConVar
 	, krcv_enablealltalk
 	, krcv_votetime
 	, krcv_onstalemate
+	, krcv_prefix
 //SourceMod/CS:GO ConVars
 	, krcv_BuyTimeNormal
 	, krcv_BuyTimeImmunity
 	, krcv_TalkDead
 	, krcv_TalkLiving;
 
+//Plugin chars
+char krc_Prefix[64];
 //Plugin integers
 int
 	kri_CvarAllowAllTalk
@@ -81,6 +84,7 @@ public void OnPluginStart()
 	krcv_votetime = CreateConVar("sm_kniferoundvotetime", "10.0", "How much time should the vote take? (5 to 20 seconds)", _, true, 5.0, true, 20.0);
 	krcv_enablealltalk = CreateConVar("sm_enablealltalk", "1", "Should alltalk be enabled while the Knife Round is running? (1 - enabled, 0 - disabled)", _, true, 0.0, true, 1.0);
 	krcv_onstalemate = CreateConVar("sm_kniferoundstalemate", "1", "Should the teams get swapped on a voting stalemate? (1 - enabled, 0 - disabled)", _, true, 0.0, true, 1.0);
+	krcv_prefix = CreateConVar("sm_kniferoundprefix", "[KnifeRound] ", "The prefix that the plugin uses for chat messages (max length is 64 characters including color formatting)");
 
 	//Getting the SourceMod/CS:GO ConVars
 	krcv_BuyTimeNormal = FindConVar("mp_buytime");
@@ -99,6 +103,7 @@ public void OnConfigsExecuted()
 	krf_CvarVoteTime = GetConVarFloat(krcv_votetime);
 	kri_CvarAllowAllTalk = GetConVarInt(krcv_enablealltalk);
 	kri_OnStaleMate = GetConVarInt(krcv_onstalemate);
+	GetConVarString(krcv_prefix, krc_Prefix, sizeof(krc_Prefix));
 
 	krf_CvarBuyTimeNormal = GetConVarFloat(krcv_BuyTimeNormal);
 	krf_CvarBuyTimeImmunity = GetConVarFloat(krcv_BuyTimeImmunity);
@@ -122,7 +127,7 @@ public Action Command_Skip(int client, int args)
 {
 	if (!krb_played)
 	{
-		CPrintToChatAll("%t", "Admin_Skip");
+		CPrintToChatAll("%t", "Admin_Skip", krc_Prefix);
 		RestartAdminSkip();
 	}
 }
@@ -130,7 +135,7 @@ public Action Command_Skip(int client, int args)
 public Action Command_Reload(int client, int args)
 {
 	OnConfigsExecuted();
-	CReplyToCommand(client, "%t", "Config_Reload");
+	CReplyToCommand(client, "%t", "Config_Reload", krc_Prefix);
 }
 
 public Action PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
@@ -171,7 +176,7 @@ public Action RoundStart(Handle event, const char[] name, bool dontBroadcast)
 	}
 	else if((kri_roundnumber == 2) && !krb_played)
 	{
-		CPrintToChatAll("%t", "Knife_Start");
+		CPrintToChatAll("%t", "Knife_Start", krc_Prefix);
 		StripPlayerWeapons();
 	}
 	return Plugin_Handled;
@@ -197,7 +202,7 @@ public Action RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 		kri_winningteam = GetEventInt(event, "winner");
 		if (kri_winningteam != CS_TEAM_CT && kri_winningteam != CS_TEAM_T)
 		{
-			CPrintToChatAll("%t", "Win_None");
+			CPrintToChatAll("%t", "Win_None", krc_Prefix);
 			RestartLastTime();
 		}
 		else
@@ -210,7 +215,7 @@ public Action RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 
 stock void TeamVote()
 {
-	CPrintToChatAll("%t", "Voting_Start");
+	CPrintToChatAll("%t", "Voting_Start", krc_Prefix);
 
 	kri_clientwinners = 0;
 	for (int i = 1;i <= MAX_PLAYERS;i++)
@@ -274,12 +279,12 @@ public Action EndTheVote(Handle hTimer)
 
 	if (b_swap)
 	{
-		CPrintToChatAll("%t", "Winning_Swap");
+		CPrintToChatAll("%t", "Winning_Swap", krc_Prefix);
 		RestartSwapLastTime();
 	}
 	else
 	{
-		CPrintToChatAll("%t", "Winning_Stay");
+		CPrintToChatAll("%t", "Winning_Stay", krc_Prefix);
 		RestartLastTime();
 	}
 }
